@@ -1,0 +1,24 @@
+# Python Code Review Checklist
+
+This checklist helps ensure that the code submitted in a pull request follows best practices and maintains high-quality standards.
+
+---
+
+
+- **PEP 8 Compliance**:
+  - [ ] Is there consistent **indentation** (preferably 4 spaces per indentation level)?
+
+- **Whitespace and Line Spacing**:
+  - [ ] Are **blank lines** used effectively to separate functions, classes, and method definitions?
+
+- **Naming Conventions for Variables and Functions**:
+  - [ ] Are **variable** and **function names** clear and meaningful, adhering to the **snake_case** naming convention?
+
+- **Code Modularization**:
+  - [ ] Is the code **structured** into smaller methods or classes, each responsible for a specific functionality?
+
+- **Code Documentation**:
+  - [ ] Is the code **self-explanatory** where possible (e.g., through clear variable names, simple logic, etc.)?
+
+
+
