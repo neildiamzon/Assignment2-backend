@@ -3,15 +3,15 @@ from urllib import request
 from django.shortcuts import render
 
 # Create your views here.
-from rest_framework import generics
+from rest_framework import generics, permissions
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
-from .models import BlogPost
-from .serializers import BlogPostSerializer
+from .models import BlogPost, Like
+from .serializers import BlogPostSerializer, LikeSerializer
 
 from .serializers import UserSerializer
 
@@ -79,3 +79,31 @@ class BlogPostDeleteView(generics.DestroyAPIView):
 
     def get_queryset(self):
         return BlogPost.objects.filter(author=self.request.user)
+
+# Like a BlogPost
+class LikeBlogPostView(generics.CreateAPIView):
+    serializer_class = LikeSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        blog_post = BlogPost.objects.get(id=self.kwargs['pk'])
+        if Like.objects.filter(user=self.request.user, blog_post=blog_post).exists():
+            raise Exception("You already liked this blog post")
+        serializer.save(user=self.request.user, blog_post=blog_post)
+
+# Unlike a BlogPost
+class UnlikeBlogPostView(generics.DestroyAPIView):
+    serializer_class = LikeSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Like.objects.filter(user=self.request.user, blog_post_id=self.kwargs['pk'])
+
+class EditUserView(generics.UpdateAPIView):
+    serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        # Returns the currently authenticated user
+        return self.request.user
+
